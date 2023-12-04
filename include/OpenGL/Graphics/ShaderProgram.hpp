@@ -1,0 +1,19 @@
+#pragma once
+
+#include "OpenGL/Common.hpp"
+
+class ShaderProgram
+{
+public:
+	ShaderProgram(const ShaderProgramDesc& i_desc);
+	~ShaderProgram();
+
+	inline UINT getID() const { return this->m_programID; }
+
+private:
+	void attach(const wchar_t* i_shaderFilePath, const ShaderType& i_type);
+	void link();
+
+	UINT m_programID;
+	std::array<UINT, 2> m_attachedShaders = {};
+};
