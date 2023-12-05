@@ -3,6 +3,7 @@
 #include "OpenGL/Graphics/Graphics.hpp"
 #include "OpenGL/Graphics/VertexArrayObject.hpp"
 #include "OpenGL/Graphics/ShaderProgram.hpp"
+#include "OpenGL/Graphics/UniformBuffer.hpp"
 
 Graphics::Graphics()
 {
@@ -47,11 +48,8 @@ Graphics::Graphics()
 	HGLRC dummyGLRC = wglCreateContext(dummyDC);
 	wglMakeCurrent(dummyDC, dummyGLRC);
 
-	if (!gladLoadWGL(dummyDC))
-		throw std::runtime_error("Graphics | Error: gladLoadWGL failed");
-
-	if (!gladLoadGL())
-		throw std::runtime_error("Graphics | Error: gladLoadGL failed");
+	if (!gladLoadWGL(dummyDC)) LB_ERROR("Graphics: gladLoadWGL failed");
+	if (!gladLoadGL()) LB_ERROR("Graphics: gladLoadGL failed");
 
 	wglMakeCurrent(dummyDC, nullptr);
 	wglDeleteContext(dummyGLRC);
@@ -69,9 +67,19 @@ VertexArrayObjectPtr Graphics::createVAO(const VertexBufferDesc& i_vbDesc)
 	return std::make_shared<VertexArrayObject>(i_vbDesc);
 }
 
+VertexArrayObjectPtr Graphics::createVAO(const VertexBufferDesc& i_vbDesc, const IndexBufferDesc& i_ibDesc)
+{
+	return std::make_shared<VertexArrayObject>(i_vbDesc, i_ibDesc);
+}
+
 ShaderProgramPtr Graphics::createShaderProgram(const ShaderProgramDesc& i_desc)
 {
 	return std::make_shared<ShaderProgram>(i_desc);
+}
+
+UniformBufferPtr Graphics::createUniformBuffer(const UniformBufferDesc& i_desc)
+{
+	return std::make_shared<UniformBuffer>(i_desc);
 }
 
 void Graphics::clear(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -90,12 +98,48 @@ void Graphics::setVAO(const VertexArrayObjectPtr& i_vao)
 	glBindVertexArray(i_vao->getID());
 }
 
+void Graphics::setUniformBuffer(const UniformBufferPtr& i_buffer, UINT i_slot)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, i_slot, i_buffer->getID());
+}
+
 void Graphics::setShaderProgram(const ShaderProgramPtr& i_shaderProgram)
 {
 	glUseProgram(i_shaderProgram->getID());
 }
 
-void Graphics::drawTriangles(GLsizei i_vertexCount, GLuint i_offset)
+void Graphics::drawTriangles(const TriangleType& i_triangleType, GLsizei i_vertexCount, GLuint i_offset)
 {
-	glDrawArrays(GL_TRIANGLES, i_offset, i_vertexCount);
+	switch (i_triangleType)
+	{
+	case TriangleType::TriangleList:
+		glDrawArrays(GL_TRIANGLES, i_offset, i_vertexCount);
+		break;
+
+	case TriangleType::TriangleStrip:
+		glDrawArrays(GL_TRIANGLE_STRIP, i_offset, i_vertexCount);
+		break;
+
+	default:
+		glDrawArrays(GL_TRIANGLES, i_offset, i_vertexCount);
+		break;
+	}
+}
+
+void Graphics::drawIndexedTriangles(const TriangleType& i_triangleType, GLsizei i_indexCount)
+{
+	switch (i_triangleType)
+	{
+	case TriangleType::TriangleList:
+		glDrawElements(GL_TRIANGLES, i_indexCount, GL_UNSIGNED_INT, nullptr);
+		break;
+
+	case TriangleType::TriangleStrip:
+		glDrawElements(GL_TRIANGLE_STRIP, i_indexCount, GL_UNSIGNED_INT, nullptr);
+		break;
+
+	default:
+		glDrawElements(GL_TRIANGLES, i_indexCount, GL_UNSIGNED_INT, nullptr);
+		break;
+	}
 }

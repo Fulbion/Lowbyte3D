@@ -1,8 +1,6 @@
 #pragma once
 
-#ifdef DEBUG
 #include <iostream>
-#endif // DEBUG
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -14,6 +12,7 @@
 
 class VertexArrayObject;
 class ShaderProgram;
+class UniformBuffer;
 
 struct VertexAttribute
 {
@@ -30,10 +29,21 @@ struct VertexBufferDesc
 	size_t attributesListSize = 0;
 };
 
+struct IndexBufferDesc
+{
+	void* indicesList = nullptr;
+	size_t listSize = 0;
+};
+
 struct ShaderProgramDesc
 {
 	const wchar_t* vertexShaderPath;
 	const wchar_t* fragmentShaderPath;
+};
+
+struct UniformBufferDesc
+{
+	size_t size = 0;
 };
 
 enum class ShaderType
@@ -42,5 +52,23 @@ enum class ShaderType
 	FragmentShader
 };
 
+enum class TriangleType
+{
+	TriangleList,
+	TriangleStrip
+};
+
 typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
+typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
+
+#define LB_ERROR(...)\
+{\
+	std::stringstream sstr;\
+	sstr << "Error: " << __VA_ARGS__ << std::endl;\
+	throw std::runtime_error(sstr.str());\
+}
+
+#define LB_WARNING(...) std::wclog << "Warning: " << __VA_ARGS__ << std::endl;
+
+#define LB_INFO(...) std::wclog << "Info: " << __VA_ARGS__ << std::endl;

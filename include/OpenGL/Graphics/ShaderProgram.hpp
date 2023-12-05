@@ -10,6 +10,8 @@ public:
 
 	inline UINT getID() const { return this->m_programID; }
 
+	void setUniformBufferSlot(const char* i_name, UINT i_slot);
+
 private:
 	void attach(const wchar_t* i_shaderFilePath, const ShaderType& i_type);
 	void link();

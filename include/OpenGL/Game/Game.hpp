@@ -1,7 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <chrono>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 #include "OpenGL/Common.hpp"
 
@@ -28,4 +32,9 @@ private:
 
 	VertexArrayObjectPtr m_vao;
 	ShaderProgramPtr m_shader;
+	UniformBufferPtr m_uniform;
+
+	std::chrono::system_clock::time_point m_previousTime;
+
+	float m_scale = 0.0f;
 };

@@ -6,6 +6,7 @@ class VertexArrayObject
 {
 public:
 	VertexArrayObject(const VertexBufferDesc& i_vbDesc);
+	VertexArrayObject(const VertexBufferDesc& i_vbDesc, const IndexBufferDesc& i_ibDesc);
 	~VertexArrayObject();
 
 	inline UINT getID() const { return this->m_vaoID; }
@@ -15,6 +16,7 @@ public:
 private:
 	UINT m_vaoID = 0;
 	UINT m_vboID = 0;
+	UINT m_elementBufferID = 0;
 
 	VertexBufferDesc m_vbDesc;
 };
