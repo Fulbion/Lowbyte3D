@@ -9,6 +9,7 @@
 
 #include "OpenGL/Common.hpp"
 
+class EntitySystem;
 class Graphics;
 class Window;
 class Game
@@ -17,18 +18,25 @@ public:
 	Game();
 	~Game();
 
+	void run();
+	void quit();
+
+	inline EntitySystem* getEntitySystem() const
+	{
+		return this->m_entitySystem.get();
+	}
+
+protected:
 	virtual void onCreate();
 	virtual void onUpdate();
 	virtual void onQuit();
-
-	void run();
-	void quit();
 
 private:
 	bool m_isRunning = true;
 
 	std::unique_ptr<Graphics> m_graphics;
 	std::unique_ptr<Window> m_window;
+	std::unique_ptr<EntitySystem> m_entitySystem;
 
 	VertexArrayObjectPtr m_vao;
 	ShaderProgramPtr m_shader;

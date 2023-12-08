@@ -7,9 +7,9 @@ layout (row_major) uniform UniformData
 };
 
 layout (location = 0) in vec3 position;
-// layout (location = 1) in vec3 inColor;
+layout (location = 1) in vec2 texcoord;
 
-// layout (location = 0) out vec3 outColor;
+layout (location = 0) out vec3 outColor;
 
 void main()
 {
@@ -17,5 +17,5 @@ void main()
 	pos = pos * projection;
 
 	gl_Position = pos;
-	// outColor = inColor;
+	outColor = vec3(texcoord, 0);
 }

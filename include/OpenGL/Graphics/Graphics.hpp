@@ -18,6 +18,8 @@ public:
 	UniformBufferPtr createUniformBuffer(const UniformBufferDesc& i_desc);
 
 	void clear(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);;
+	void setFaceCulling(const CullType& i_cullType);
+	void setWindingOrder(const WindingOrder& i_order);
 	void setViewport(const Rect<UINT>& i_size);
 	void setVAO(const VertexArrayObjectPtr& i_vao);
 	void setUniformBuffer(const UniformBufferPtr& i_buffer, UINT i_slot);

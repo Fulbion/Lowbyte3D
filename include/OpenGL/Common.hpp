@@ -58,6 +58,19 @@ enum class TriangleType
 	TriangleStrip
 };
 
+enum class CullType
+{
+	Back,
+	Front,
+	Both
+};
+
+enum class WindingOrder
+{
+	CW,
+	CCW
+};
+
 typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
 typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;

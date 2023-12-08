@@ -88,6 +88,48 @@ void Graphics::clear(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Graphics::setFaceCulling(const CullType& i_cullType)
+{
+	GLenum cullType = 0;
+
+	switch (i_cullType)
+	{
+	case CullType::Back:
+		cullType = GL_BACK;
+
+	case CullType::Front:
+		cullType = GL_FRONT;
+
+	case CullType::Both:
+		cullType = GL_FRONT_AND_BACK;
+
+	default:
+		cullType = GL_BACK;
+	}
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(cullType);
+}
+
+void Graphics::setWindingOrder(const WindingOrder& i_order)
+{
+	GLenum order = 0;
+
+	switch (i_order)
+	{
+	case WindingOrder::CW:
+		order = GL_CW;
+
+	case WindingOrder::CCW:
+		order = GL_CCW;
+
+	default:
+		order = GL_CW;
+	}
+
+	glFrontFace(order);
+}
+
 void Graphics::setViewport(const Rect<UINT>& i_size)
 {
 	glViewport(i_size.left, i_size.top, i_size.width, i_size.height);

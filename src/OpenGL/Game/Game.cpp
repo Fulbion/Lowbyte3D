@@ -6,6 +6,7 @@
 #include "OpenGL/Graphics/ShaderProgram.hpp"
 #include "OpenGL/Graphics/UniformBuffer.hpp"
 #include "OpenGL/Graphics/Graphics.hpp"
+#include "OpenGL/Entity/EntitySystem.hpp"
 #include "OpenGL/Window/Window.hpp"
 
 #define MATRIX_ROTATION_X_AXIS glm::vec3(1, 0, 0)
@@ -18,7 +19,13 @@ struct UniformData
 	glm::mat4x4 projection;
 };
 
-glm::mat4x4 orthoLH(float i_width, float i_height, float i_nearPlane, float i_farPlane)
+struct Vertex
+{
+	glm::vec3 position;
+	glm::vec2 texcoord;
+};
+
+static glm::mat4x4 orthoLH(float i_width, float i_height, float i_nearPlane, float i_farPlane)
 {
 	glm::mat4x4 output = glm::identity<glm::mat4x4>();
 	output[0][0] = 2.0f / i_width;
@@ -32,6 +39,7 @@ Game::Game()
 {
 	this->m_graphics = std::make_unique<Graphics>();
 	this->m_window = std::make_unique<Window>();
+	this->m_entitySystem = std::make_unique<EntitySystem>();
 
 	this->m_window->makeCurrentContext();
 
@@ -65,41 +73,67 @@ void Game::onCreate()
 		4, 5, 6,
 		6, 7, 4,
 
-		1, 6, 5,
-		5, 2, 1,
+		8, 9, 10,
+		10, 11, 8,
 
-		7, 0, 3,
-		3, 4, 7,
+		12, 13, 14,
+		14, 15, 12,
 
-		3, 2, 5,
-		5, 4, 3,
+		16, 17, 18,
+		18, 19, 16,
 
-		7, 6, 1,
-		1, 0, 7
+		20, 21, 22,
+		22, 23, 20
 	};
 
-	// const GLfloat polygonVertices[] =
-	// {
-	// 	-0.5f, -0.5f, 0.0f,
-	// 	1.0f, 0.0f, 0.0f,
-	// 
-	// 	-0.5f, 0.5f, 0.0f,
-	// 	0.0f, 1.0f, 0.0f,
-	// 
-	// 	0.5f, -0.5f, 0.0f,
-	// 	0.0f, 0.0f, 1.0f,
-	// 
-	// 	0.5f, 0.5f, 0.0f,
-	// 	1.0f, 1.0f, 0.0f,
-	// };
+	glm::vec2 texcoordsList[] =
+	{
+		{ 0, 0 },
+		{ 0, 1 },
+		{ 1, 0 },
+		{ 1, 1 }
+	};
+
+	Vertex verticesList[] =
+	{
+		{ cubeVertices[0], texcoordsList[1] },
+		{ cubeVertices[1], texcoordsList[0] },
+		{ cubeVertices[2], texcoordsList[2] },
+		{ cubeVertices[3], texcoordsList[3] },
+
+		{ cubeVertices[4], texcoordsList[1] },
+		{ cubeVertices[5], texcoordsList[0] },
+		{ cubeVertices[6], texcoordsList[2] },
+		{ cubeVertices[7], texcoordsList[3] },
+
+		{ cubeVertices[1], texcoordsList[1] },
+		{ cubeVertices[6], texcoordsList[0] },
+		{ cubeVertices[5], texcoordsList[2] },
+		{ cubeVertices[2], texcoordsList[3] },
+
+		{ cubeVertices[7], texcoordsList[1] },
+		{ cubeVertices[0], texcoordsList[0] },
+		{ cubeVertices[3], texcoordsList[2] },
+		{ cubeVertices[4], texcoordsList[3] },
+
+		{ cubeVertices[3], texcoordsList[1] },
+		{ cubeVertices[2], texcoordsList[0] },
+		{ cubeVertices[5], texcoordsList[2] },
+		{ cubeVertices[4], texcoordsList[3] },
+
+		{ cubeVertices[7], texcoordsList[1] },
+		{ cubeVertices[6], texcoordsList[0] },
+		{ cubeVertices[1], texcoordsList[2] },
+		{ cubeVertices[0], texcoordsList[3] }
+	};
 
 	VertexAttribute attribsList[] =
 	{
 		sizeof(glm::vec3) / sizeof(GLfloat), // Position
-		// 3  // Color
+		sizeof(glm::vec2) / sizeof(GLfloat)  // Color
 	};
 
-	this->m_vao = this->m_graphics->createVAO({ (void*)cubeVertices, sizeof(glm::vec3), sizeof(cubeVertices) / sizeof(glm::vec3), attribsList, sizeof(attribsList) / sizeof(VertexAttribute) }, { (void*)cubeIndices, sizeof(cubeIndices) });
+	this->m_vao = this->m_graphics->createVAO({ (void*)verticesList, sizeof(Vertex), sizeof(verticesList) / sizeof(Vertex), attribsList, sizeof(attribsList) / sizeof(VertexAttribute) }, { (void*)cubeIndices, sizeof(cubeIndices) });
 	this->m_uniform = this->m_graphics->createUniformBuffer({ sizeof(UniformData) });
 	this->m_shader = this->m_graphics->createShaderProgram({ L"../../../resources/shaders/vertex.vert", L"../../../resources/shaders/fragment.frag" });
 	this->m_shader->setUniformBufferSlot("UniformData", 0);
@@ -146,12 +180,14 @@ void Game::onUpdate()
 	UniformData data = { world, projection };
 	this->m_uniform->setData(&data);
 
-	this->m_graphics->clear(0.0, 0.0f, 0.0f, 1.0f);
+	this->m_graphics->clear(0.1, 0.1f, 0.4f, 1.0f);
 
+	this->m_graphics->setFaceCulling(CullType::Back);
+	this->m_graphics->setWindingOrder(WindingOrder::CW);
 	this->m_graphics->setVAO(this->m_vao);
 	this->m_graphics->setUniformBuffer(this->m_uniform, 0);
 	this->m_graphics->setShaderProgram(this->m_shader);
-	this->m_graphics->drawIndexedTriangles(TriangleType::TriangleStrip, 36);
+	this->m_graphics->drawIndexedTriangles(TriangleType::TriangleList, 36);
 
 	this->m_window->present(false);
 }
