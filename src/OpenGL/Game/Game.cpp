@@ -139,7 +139,7 @@ void Game::onCreate()
 	this->m_shader->setUniformBufferSlot("UniformData", 0);
 }
 
-void Game::onUpdate()
+void Game::onUpdateInternal()
 {
 	auto currentTime = std::chrono::system_clock::now();
 	auto elapsedTime = std::chrono::duration<double>();
@@ -149,6 +149,9 @@ void Game::onUpdate()
 	this->m_previousTime = currentTime;
 
 	float deltaTime = static_cast<float>(elapsedTime.count());
+
+	this->onUpdate(deltaTime);
+	this->m_entitySystem->update(deltaTime);
 
 	this->m_scale += 3.14159f * deltaTime;
 	float currentScale = abs(sin(this->m_scale));
@@ -221,7 +224,7 @@ void Game::run()
 			}
 		}
 
-		this->onUpdate();
+		this->onUpdateInternal();
 	}
 
 	this->onQuit();

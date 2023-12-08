@@ -28,10 +28,12 @@ public:
 
 protected:
 	virtual void onCreate();
-	virtual void onUpdate();
+	virtual void onUpdate(float i_deltaTime) {}
 	virtual void onQuit();
 
 private:
+	void onUpdateInternal();
+
 	bool m_isRunning = true;
 
 	std::unique_ptr<Graphics> m_graphics;

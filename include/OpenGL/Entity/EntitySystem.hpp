@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 
 class Entity;
@@ -24,6 +25,13 @@ public:
 
 private:
 	bool createEntityInternal(Entity* i_entity, size_t i_id);
+	void removeEntity(Entity* i_entity);
+
+	void update(float i_deltaTime);
 
 	std::unordered_map<size_t, std::unordered_map<Entity*, std::unique_ptr<Entity>>> m_entities;
+	std::unordered_set<Entity*> m_entitiesToDestroy;
+
+	friend class Entity;
+	friend class Game;
 };

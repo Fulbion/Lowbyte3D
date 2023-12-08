@@ -1,18 +1,17 @@
 #pragma once
 
 #include "Engine.hpp"
-#include "Application/Cube.hpp"
 
-class Application : public Game
+class Cube : public Entity
 {
 public:
-	Application();
-	~Application();
+	Cube();
+	~Cube();
 
 	virtual void onCreate();
 	virtual void onUpdate(float i_deltaTime);
 
 private:
 	float m_elapsedTime = 0.0f;
-	Cube* m_cube = nullptr;
+	Entity* m_entity = nullptr;
 };
