@@ -9,9 +9,6 @@
 #include "OpenGL/Entity/EntitySystem.hpp"
 #include "OpenGL/Window/Window.hpp"
 
-#define MATRIX_ROTATION_X_AXIS glm::vec3(1, 0, 0)
-#define MATRIX_ROTATION_Y_AXIS glm::vec3(0, 1, 0)
-#define MATRIX_ROTATION_Z_AXIS glm::vec3(0, 0, 1)
 
 struct UniformData
 {

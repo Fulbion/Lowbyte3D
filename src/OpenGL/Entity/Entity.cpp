@@ -1,9 +1,11 @@
 #include "OpenGL/Entity/Entity.hpp"
 #include "OpenGL/Entity/EntitySystem.hpp"
 #include "OpenGL/Entity/Component.hpp"
+#include "OpenGL/Entity/TransformComponent.hpp"
 
 Entity::Entity()
 {
+	this->m_transformComponent = this->createComponent<TransformComponent>();
 }
 
 Entity::~Entity()

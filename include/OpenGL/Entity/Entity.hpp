@@ -16,6 +16,11 @@ public:
 		return this->m_entitySystem;
 	}
 
+	inline TransformComponent* getTransformComponent() const
+	{
+		return this->m_transformComponent;
+	}
+
 	template<typename T>
 	T* createComponent()
 	{
@@ -40,7 +45,7 @@ public:
 	{
 		static_assert(std::is_base_of<Component, T>::value, "T must derive from Component class");
 		size_t id = typeid(T).hash_code();
-		return this->getComponentInternal(id);
+		return (T*)this->getComponentInternal(id);
 	}
 
 protected:
@@ -49,6 +54,7 @@ protected:
 
 	size_t m_id;
 	EntitySystem* m_entitySystem = nullptr;
+	TransformComponent* m_transformComponent = nullptr;
 
 private:
 	std::unordered_map<size_t, std::unique_ptr<Component>> m_components;

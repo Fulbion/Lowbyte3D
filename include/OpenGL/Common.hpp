@@ -10,6 +10,11 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <Windows.h>
+#include <glm/glm.hpp>
+
+#define MATRIX_ROTATION_X_AXIS glm::vec3(1, 0, 0)
+#define MATRIX_ROTATION_Y_AXIS glm::vec3(0, 1, 0)
+#define MATRIX_ROTATION_Z_AXIS glm::vec3(0, 0, 1)
 
 class GraphicsEngine;
 class VertexArrayObject;
@@ -18,6 +23,7 @@ class UniformBuffer;
 class Entity;
 class EntitySystem;
 class Component;
+class TransformComponent;
 
 typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
