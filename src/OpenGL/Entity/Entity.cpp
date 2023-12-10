@@ -18,7 +18,7 @@ void Entity::release()
 bool Entity::createComponentInternal(Component* i_component, size_t i_id)
 {
 	std::unique_ptr<Component> ptr = std::unique_ptr<Component>(i_component);
-	this->m_components.emplace(i_component, std::move(ptr));
+	this->m_components.emplace(i_id, std::move(ptr));
 
 	i_component->m_id = i_id;
 	i_component->m_entity = this;
@@ -26,6 +26,7 @@ bool Entity::createComponentInternal(Component* i_component, size_t i_id)
 	return true;
 }
 
-void Entity::removeComponent(Component* i_component)
+void Entity::removeComponent(size_t i_id)
 {
+	this->m_components.erase(i_id);
 }

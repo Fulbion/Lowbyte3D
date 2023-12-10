@@ -19,7 +19,7 @@ public:
 	template<typename T>
 	T* createComponent()
 	{
-		static_assert(std::is_base_of<Entity, T>::value, "T must derive from Entity class");
+		static_assert(std::is_base_of<Component, T>::value, "T must derive from Component class");
 		
 		auto c = this->getComponent<T>();
 
@@ -38,7 +38,7 @@ public:
 	template<typename T>
 	T* getComponent() const
 	{
-		static_assert(std::is_base_of<Entity, T>::value, "T must derive from Entity class");
+		static_assert(std::is_base_of<Component, T>::value, "T must derive from Component class");
 		size_t id = typeid(T).hash_code();
 		return this->getComponentInternal(id);
 	}
@@ -55,7 +55,7 @@ private:
 	// std::unordered_set<Component*> m_componentsToDestroy;
 
 	bool createComponentInternal(Component* i_component, size_t i_id);
-	void removeComponent(Component* i_component);
+	void removeComponent(size_t i_id);
 	
 	inline Component* getComponentInternal(size_t i_id) const
 	{
@@ -66,4 +66,5 @@ private:
 	}
 
 	friend class EntitySystem;
+	friend class Component;
 };
