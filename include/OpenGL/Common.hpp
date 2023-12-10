@@ -8,11 +8,20 @@
 #include <array>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <Windows.h>
 
+class GraphicsEngine;
 class VertexArrayObject;
 class ShaderProgram;
 class UniformBuffer;
+class Entity;
+class EntitySystem;
+class Component;
+
+typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
+typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
+typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 
 struct VertexAttribute
 {
@@ -70,10 +79,6 @@ enum class WindingOrder
 	CW,
 	CCW
 };
-
-typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
-typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;
-typedef std::shared_ptr<UniformBuffer> UniformBufferPtr;
 
 #define LB_ERROR(...)\
 {\

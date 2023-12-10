@@ -19,6 +19,7 @@ void Cube::onUpdate(float i_deltaTime)
 
 	if (this->m_entity && this->m_elapsedTime >= 3)
 	{
+		this->m_entity->getComponent<Component>();
 		this->m_entity->release();
 		this->m_entity = nullptr;
 	}
