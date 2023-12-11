@@ -24,6 +24,7 @@ class Entity;
 class EntitySystem;
 class Component;
 class TransformComponent;
+class InputSystem;
 
 typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

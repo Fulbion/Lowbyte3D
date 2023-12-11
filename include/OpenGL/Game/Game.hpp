@@ -8,11 +8,12 @@
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "OpenGL/Common.hpp"
+#include "OpenGL/Input/InputListener.hpp"
 
 class EntitySystem;
 class Graphics;
 class Window;
-class Game
+class Game : public InputListener
 {
 public:
 	Game();
@@ -34,11 +35,15 @@ protected:
 private:
 	void onUpdateInternal();
 
+	virtual void onKeyPressed(int i_key) override;
+	virtual void onKeyReleased(int i_key) override;
+
 	bool m_isRunning = true;
 
 	std::unique_ptr<Graphics> m_graphics;
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<EntitySystem> m_entitySystem;
+	std::unique_ptr<InputSystem> m_inputSystem;
 
 	VertexArrayObjectPtr m_vao;
 	ShaderProgramPtr m_shader;
@@ -46,5 +51,8 @@ private:
 
 	std::chrono::system_clock::time_point m_previousTime;
 
+	float m_deltaTime = 0.0f;
 	float m_scale = 0.0f;
+	float m_cubeRotationX = 0.0f;
+	float m_cubeRotationY = 0.0f;
 };

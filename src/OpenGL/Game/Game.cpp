@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "OpenGL/Game/Game.hpp"
+#include "OpenGL/Input/InputSystem.hpp"
 #include "OpenGL/Graphics/VertexArrayObject.hpp"
 #include "OpenGL/Graphics/ShaderProgram.hpp"
 #include "OpenGL/Graphics/UniformBuffer.hpp"
@@ -37,6 +38,7 @@ Game::Game()
 	this->m_graphics = std::make_unique<Graphics>();
 	this->m_window = std::make_unique<Window>();
 	this->m_entitySystem = std::make_unique<EntitySystem>();
+	this->m_inputSystem = std::make_unique<InputSystem>();
 
 	this->m_window->makeCurrentContext();
 
@@ -49,6 +51,8 @@ Game::~Game()
 
 void Game::onCreate()
 {
+	this->m_inputSystem->addListener(this);
+
 	glm::vec3 cubeVertices[] =
 	{
 		{ -0.5f, -0.5f, -0.5f },
@@ -138,6 +142,8 @@ void Game::onCreate()
 
 void Game::onUpdateInternal()
 {
+	this->m_inputSystem->update();
+
 	auto currentTime = std::chrono::system_clock::now();
 	auto elapsedTime = std::chrono::duration<double>();
 
@@ -146,6 +152,7 @@ void Game::onUpdateInternal()
 	this->m_previousTime = currentTime;
 
 	float deltaTime = static_cast<float>(elapsedTime.count());
+	this->m_deltaTime = deltaTime;
 
 	this->onUpdate(deltaTime);
 	this->m_entitySystem->update(deltaTime);
@@ -156,20 +163,20 @@ void Game::onUpdateInternal()
 	glm::mat4x4 world = glm::identity<glm::mat4x4>();
 	glm::mat4x4 temp;
 	glm::mat4x4 projection = glm::identity<glm::mat4x4>();
-
+	
 	temp = glm::identity<glm::mat4x4>();
-	temp = glm::rotate(temp, (float)(this->m_scale * 0.5), MATRIX_ROTATION_X_AXIS);
-
+	temp = glm::rotate(temp, (float)(0.0f), MATRIX_ROTATION_Z_AXIS);
+	
 	world *= temp;
 
 	temp = glm::identity<glm::mat4x4>();
-	temp = glm::rotate(temp, (float)(this->m_scale * 0.5), MATRIX_ROTATION_Y_AXIS);
-
+	temp = glm::rotate(temp, (float)(this->m_cubeRotationX), MATRIX_ROTATION_X_AXIS);
+	
 	world *= temp;
-
+	
 	temp = glm::identity<glm::mat4x4>();
-	temp = glm::rotate(temp, (float)(this->m_scale * 0.5), MATRIX_ROTATION_Z_AXIS);
-
+	temp = glm::rotate(temp, (float)(this->m_cubeRotationY), MATRIX_ROTATION_Y_AXIS);
+	
 	world *= temp;
 
 	Rect<UINT> displaySize = this->m_window->getSize();
@@ -190,6 +197,33 @@ void Game::onUpdateInternal()
 	this->m_graphics->drawIndexedTriangles(TriangleType::TriangleList, 36);
 
 	this->m_window->present(false);
+}
+
+void Game::onKeyPressed(int i_key)
+{
+	if (i_key == VK_LEFT)
+	{
+		this->m_cubeRotationY += 1 * this->m_deltaTime;
+	}
+
+	if (i_key == VK_RIGHT)
+	{
+		this->m_cubeRotationY -= 1 * this->m_deltaTime;
+	}
+
+	if (i_key == VK_UP)
+	{
+		this->m_cubeRotationX += 1 * this->m_deltaTime;
+	}
+
+	if (i_key == VK_DOWN)
+	{
+		this->m_cubeRotationX -= 1 * this->m_deltaTime;
+	}
+}
+
+void Game::onKeyReleased(int i_key)
+{
 }
 
 void Game::onQuit()
