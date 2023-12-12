@@ -19,6 +19,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
+	case WM_SETFOCUS:
+	{
+		Window* window = (Window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		window->onFocus();
+	}
+
+	case WM_KILLFOCUS:
+	{
+		Window* window = (Window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		window->onKillFocus();
+	}
+
 	default:
 		return DefWindowProc(hWnd, Msg, wParam, lParam);
 	}
@@ -117,4 +129,14 @@ void Window::present(bool i_vSync)
 {
 	wglSwapIntervalEXT(i_vSync);
 	wglSwapLayerBuffers(GetDC(this->m_hwnd), WGL_SWAP_MAIN_PLANE);;
+}
+
+void Window::onFocus()
+{
+	this->m_hasFocus = true;
+}
+
+void Window::onKillFocus()
+{
+	this->m_hasFocus = false;
 }

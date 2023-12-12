@@ -226,6 +226,27 @@ void Game::onKeyReleased(int i_key)
 {
 }
 
+void Game::onMouseMove(const glm::ivec2& i_position)
+{
+	if (this->m_canRotate)
+	{
+		this->m_cubeRotationX -= i_position.y * this->m_deltaTime * 10;
+		this->m_cubeRotationY -= i_position.x * this->m_deltaTime * 10;
+	}
+}
+
+void Game::onMouseButtonPressed(const MouseButton& i_button, const glm::ivec2& i_position)
+{
+	if (i_button == MouseButton::Left)
+		this->m_canRotate = true;
+}
+
+void Game::onMouseButtonReleased(const MouseButton& i_button, const glm::ivec2& i_position)
+{
+	if (i_button == MouseButton::Left)
+		this->m_canRotate = false;
+}
+
 void Game::onQuit()
 {
 }

@@ -22,9 +22,19 @@ public:
 	void makeCurrentContext();
 	void present(bool i_vSync);
 
+	virtual void onFocus();
+	virtual void onKillFocus();
+
+	inline bool hasFocus() const
+	{
+		return this->m_hasFocus;
+	}
+
 private:
 	// Window handle
 	HWND m_hwnd = nullptr;
 	// Context handle
 	HGLRC m_hglrc = nullptr;
+
+	bool m_hasFocus = true;
 };

@@ -55,4 +55,9 @@ private:
 	float m_scale = 0.0f;
 	float m_cubeRotationX = 0.0f;
 	float m_cubeRotationY = 0.0f;
+	bool m_canRotate = false;
+
+	void onMouseMove(const glm::ivec2& i_position) override;
+	void onMouseButtonPressed(const MouseButton& i_button, const glm::ivec2& i_position) override;
+	void onMouseButtonReleased(const MouseButton& i_button, const glm::ivec2& i_position) override;
 };

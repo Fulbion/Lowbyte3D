@@ -1,6 +1,11 @@
 #pragma once
 
-template<typename T>
+/// <summary>
+/// I implement my own Rect struct, becuase the RECT type provided by the Windows API is less intuitive.
+/// On the other hand, this one uses the left, top, width and height attributes.
+/// </summary>
+/// <typeparam name="T">The type of all the attributes (`float` if nothing is provided)</typeparam>
+template<typename T = float>
 struct Rect
 {
 	T left, top, width, height;

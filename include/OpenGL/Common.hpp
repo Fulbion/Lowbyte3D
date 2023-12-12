@@ -87,6 +87,13 @@ enum class WindingOrder
 	CCW
 };
 
+enum class MouseButton
+{
+	Left,
+	Middle,
+	Right
+};
+
 #define LB_ERROR(...)\
 {\
 	std::stringstream sstr;\
